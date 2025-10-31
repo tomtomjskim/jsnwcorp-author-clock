@@ -1,5 +1,5 @@
-import { X, Clock as ClockIcon, RefreshCw } from 'lucide-react';
-import { useSettings, type TimeFormat, type QuoteInterval } from '../hooks/useSettings';
+import { X, Clock as ClockIcon, RefreshCw, Calendar } from 'lucide-react';
+import { useSettings, type TimeFormat, type QuoteInterval, type DateFormat, type DatePosition } from '../hooks/useSettings';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -17,6 +17,22 @@ const QUOTE_INTERVALS: { value: QuoteInterval; label: string }[] = [
   { value: 1440, label: '24시간 (하루)' },
 ];
 
+const DATE_FORMATS: { value: DateFormat; label: string }[] = [
+  { value: 'hidden', label: '숨김' },
+  { value: 'ko-long', label: '한글 긴 형식 (2025년 10월 31일 목요일)' },
+  { value: 'ko-short', label: '한글 짧은 형식 (2025.10.31)' },
+  { value: 'en-long', label: '영문 긴 형식 (Thursday, October 31, 2025)' },
+  { value: 'en-short', label: '영문 짧은 형식 (10/31/2025)' },
+  { value: 'en-iso', label: 'ISO 형식 (2025-10-31)' },
+];
+
+const DATE_POSITIONS: { value: DatePosition; label: string }[] = [
+  { value: 'above-time', label: '시간 위' },
+  { value: 'below-time', label: '시간 아래' },
+  { value: 'above-quote', label: '명언 위' },
+  { value: 'below-quote', label: '명언 아래' },
+];
+
 export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const { settings, updateSettings, resetSettings } = useSettings();
 
@@ -28,6 +44,14 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
   const handleQuoteIntervalChange = (interval: QuoteInterval) => {
     updateSettings({ quoteInterval: interval });
+  };
+
+  const handleDateFormatChange = (format: DateFormat) => {
+    updateSettings({ dateFormat: format });
+  };
+
+  const handleDatePositionChange = (position: DatePosition) => {
+    updateSettings({ datePosition: position });
   };
 
   return (
@@ -106,6 +130,46 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               선택한 시간마다 새로운 명언이 표시됩니다
             </p>
           </div>
+
+          {/* Date Format Setting */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Calendar size={20} />
+              <h3 className="text-lg font-semibold">날짜 표기</h3>
+            </div>
+            <select
+              value={settings.dateFormat}
+              onChange={(e) => handleDateFormatChange(e.target.value as DateFormat)}
+              className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {DATE_FORMATS.map((format) => (
+                <option key={format.value} value={format.value}>
+                  {format.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Date Position Setting */}
+          {settings.dateFormat !== 'hidden' && (
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar size={20} />
+                <h3 className="text-lg font-semibold">날짜 위치</h3>
+              </div>
+              <select
+                value={settings.datePosition}
+                onChange={(e) => handleDatePositionChange(e.target.value as DatePosition)}
+                className="w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {DATE_POSITIONS.map((position) => (
+                  <option key={position.value} value={position.value}>
+                    {position.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Reset Button */}
           <button

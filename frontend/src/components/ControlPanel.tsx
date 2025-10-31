@@ -8,6 +8,7 @@ interface ControlPanelProps {
   onRefresh: () => void;
   onSettingsClick: () => void;
   isRefreshing?: boolean;
+  isVisible?: boolean;
 }
 
 export function ControlPanel({
@@ -18,9 +19,14 @@ export function ControlPanel({
   onRefresh,
   onSettingsClick,
   isRefreshing = false,
+  isVisible = true,
 }: ControlPanelProps) {
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full shadow-lg px-6 py-3 flex items-center gap-4 border border-gray-200 dark:border-gray-700">
+    <div
+      className={`fixed bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full shadow-lg px-6 py-3 flex items-center gap-4 border border-gray-200 dark:border-gray-700 transition-all duration-500 ease-in-out ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
+      }`}
+    >
       {/* Settings Button */}
       <button
         onClick={onSettingsClick}

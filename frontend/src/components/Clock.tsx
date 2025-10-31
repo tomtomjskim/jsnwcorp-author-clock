@@ -22,7 +22,7 @@ export function Clock() {
   };
 
   return (
-    <div className="text-center mb-8">
+    <div className="text-center mb-8 select-none">
       <time
         dateTime={time.toISOString()}
         className="text-6xl md:text-8xl font-bold tracking-wider font-mono"

@@ -34,7 +34,7 @@ export function QuoteDisplay({ quote, isLoading, error }: QuoteDisplayProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto text-center py-8 px-4 animate-fade-in">
+    <div className="max-w-4xl mx-auto text-center py-8 px-4 animate-fade-in select-none">
       {/* Quote Text */}
       <blockquote className="text-2xl md:text-4xl font-serif leading-relaxed mb-8 text-balance">
         "{quote.text}"

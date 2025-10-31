@@ -2,15 +2,21 @@ import { useState, useEffect } from 'react';
 
 export type TimeFormat = '24h' | '12h';
 export type QuoteInterval = 1 | 5 | 10 | 30 | 60 | 360 | 720 | 1440; // minutes
+export type DateFormat = 'hidden' | 'ko-long' | 'ko-short' | 'en-long' | 'en-short' | 'en-iso';
+export type DatePosition = 'above-time' | 'below-time' | 'above-quote' | 'below-quote';
 
 export interface Settings {
   timeFormat: TimeFormat;
   quoteInterval: QuoteInterval;
+  dateFormat: DateFormat;
+  datePosition: DatePosition;
 }
 
 const DEFAULT_SETTINGS: Settings = {
   timeFormat: '24h',
   quoteInterval: 1440, // 24 hours (daily)
+  dateFormat: 'ko-long',
+  datePosition: 'above-time',
 };
 
 const STORAGE_KEY = 'author-clock-settings';

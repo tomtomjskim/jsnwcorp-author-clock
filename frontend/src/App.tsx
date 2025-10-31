@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Clock } from './components/Clock';
+import { DateDisplay } from './components/DateDisplay';
 import { QuoteDisplay } from './components/QuoteDisplay';
 import { ControlPanel } from './components/ControlPanel';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -8,6 +9,8 @@ import { useTodayQuote, useRandomQuote } from './hooks/useQuote';
 import { useTheme } from './hooks/useTheme';
 import { useFullscreen } from './hooks/useFullscreen';
 import { useSettings } from './hooks/useSettings';
+import { useDoubleClick } from './hooks/useDoubleClick';
+import { useIdleDetection } from './hooks/useIdleDetection';
 import type { Language } from './types/quote';
 
 const queryClient = new QueryClient();
@@ -22,6 +25,19 @@ function AuthorClock() {
   const { data: randomQuote, isLoading: isLoadingRandom, error: randomError, refetch: refetchRandom, isRefetching: isRefetchingRandom } = useRandomQuote(language);
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
+
+  // Enable double-click/double-tap fullscreen toggle
+  useDoubleClick({
+    onDoubleClick: toggleFullscreen,
+    excludeSelectors: ['button', 'a', 'input', 'textarea', 'select'],
+  });
+
+  // Auto-hide controls on idle
+  const { shouldShowControls } = useIdleDetection({
+    idleTimeout: 3000,
+    showOnBottomZone: true,
+    bottomZonePercentage: 20,
+  });
 
   // Determine which quote to show based on interval setting
   const quote = quoteMode === 'daily' ? dailyQuote : randomQuote;
@@ -60,9 +76,13 @@ function AuthorClock() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl">
+      <div className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl gap-4">
+        {settings.datePosition === 'above-time' && <DateDisplay />}
         <Clock />
+        {settings.datePosition === 'below-time' && <DateDisplay />}
+        {settings.datePosition === 'above-quote' && <DateDisplay />}
         <QuoteDisplay quote={quote} isLoading={isLoading} error={error} />
+        {settings.datePosition === 'below-quote' && <DateDisplay />}
       </div>
 
       {/* Control Panel */}
@@ -74,6 +94,7 @@ function AuthorClock() {
         onRefresh={handleRefresh}
         onSettingsClick={() => setIsSettingsOpen(true)}
         isRefreshing={isRefreshing}
+        isVisible={shouldShowControls}
       />
 
       {/* Settings Panel */}
