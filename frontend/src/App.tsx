@@ -1,23 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Clock } from './components/Clock';
 import { QuoteDisplay } from './components/QuoteDisplay';
 import { ControlPanel } from './components/ControlPanel';
-import { useTodayQuote } from './hooks/useQuote';
+import { SettingsPanel } from './components/SettingsPanel';
+import { useTodayQuote, useRandomQuote } from './hooks/useQuote';
 import { useTheme } from './hooks/useTheme';
 import { useFullscreen } from './hooks/useFullscreen';
+import { useSettings } from './hooks/useSettings';
 import type { Language } from './types/quote';
 
 const queryClient = new QueryClient();
 
 function AuthorClock() {
   const [language] = useState<Language>('ko');
-  const { data: quote, isLoading, error, refetch, isRefetching } = useTodayQuote(language);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [quoteMode, setQuoteMode] = useState<'interval' | 'daily'>('daily');
+
+  const { settings } = useSettings();
+  const { data: dailyQuote, isLoading: isLoadingDaily, error: dailyError, refetch: refetchDaily, isRefetching: isRefetchingDaily } = useTodayQuote(language);
+  const { data: randomQuote, isLoading: isLoadingRandom, error: randomError, refetch: refetchRandom, isRefetching: isRefetchingRandom } = useRandomQuote(language);
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
+  // Determine which quote to show based on interval setting
+  const quote = quoteMode === 'daily' ? dailyQuote : randomQuote;
+  const isLoading = quoteMode === 'daily' ? isLoadingDaily : isLoadingRandom;
+  const error = quoteMode === 'daily' ? dailyError : randomError;
+  const isRefreshing = quoteMode === 'daily' ? isRefetchingDaily : isRefetchingRandom;
+
+  // Auto-rotate quotes based on interval setting
+  useEffect(() => {
+    if (settings.quoteInterval === 1440) {
+      // 24 hours - use daily quote
+      setQuoteMode('daily');
+      return;
+    }
+
+    // Use interval-based rotation
+    setQuoteMode('interval');
+    refetchRandom(); // Initial fetch
+
+    const intervalMs = settings.quoteInterval * 60 * 1000;
+    const interval = setInterval(() => {
+      refetchRandom();
+    }, intervalMs);
+
+    return () => clearInterval(interval);
+  }, [settings.quoteInterval, refetchRandom]);
+
   const handleRefresh = () => {
-    refetch();
+    if (quoteMode === 'daily') {
+      refetchDaily();
+    } else {
+      refetchRandom();
+    }
   };
 
   return (
@@ -35,7 +72,14 @@ function AuthorClock() {
         onThemeToggle={toggleTheme}
         onFullscreenToggle={toggleFullscreen}
         onRefresh={handleRefresh}
-        isRefreshing={isRefetching}
+        onSettingsClick={() => setIsSettingsOpen(true)}
+        isRefreshing={isRefreshing}
+      />
+
+      {/* Settings Panel */}
+      <SettingsPanel
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
 
       {/* App Info (Hidden in Fullscreen) */}

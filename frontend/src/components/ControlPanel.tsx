@@ -1,4 +1,4 @@
-import { Sun, Moon, Maximize, Minimize, RefreshCw } from 'lucide-react';
+import { Sun, Moon, Maximize, Minimize, RefreshCw, Settings } from 'lucide-react';
 
 interface ControlPanelProps {
   theme: 'light' | 'dark';
@@ -6,6 +6,7 @@ interface ControlPanelProps {
   onThemeToggle: () => void;
   onFullscreenToggle: () => void;
   onRefresh: () => void;
+  onSettingsClick: () => void;
   isRefreshing?: boolean;
 }
 
@@ -15,10 +16,21 @@ export function ControlPanel({
   onThemeToggle,
   onFullscreenToggle,
   onRefresh,
+  onSettingsClick,
   isRefreshing = false,
 }: ControlPanelProps) {
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full shadow-lg px-6 py-3 flex items-center gap-4 border border-gray-200 dark:border-gray-700">
+      {/* Settings Button */}
+      <button
+        onClick={onSettingsClick}
+        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        title="설정"
+        aria-label="설정"
+      >
+        <Settings size={20} />
+      </button>
+
       {/* Refresh Button */}
       <button
         onClick={onRefresh}
