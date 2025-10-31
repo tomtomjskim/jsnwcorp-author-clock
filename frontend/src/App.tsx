@@ -29,7 +29,7 @@ function AuthorClock() {
   // Enable double-click/double-tap fullscreen toggle
   useDoubleClick({
     onDoubleClick: toggleFullscreen,
-    excludeSelectors: ['button', 'a', 'input', 'textarea', 'select'],
+    excludeSelectors: ['button', 'a', 'input', 'textarea', 'select', 'label', '[role="dialog"]', '.settings-panel'],
   });
 
   // Auto-hide controls on idle
@@ -55,15 +55,22 @@ function AuthorClock() {
 
     // Use interval-based rotation
     setQuoteMode('interval');
-    refetchRandom(); // Initial fetch
 
+    // Set up interval for auto-rotation
     const intervalMs = settings.quoteInterval * 60 * 1000;
     const interval = setInterval(() => {
       refetchRandom();
     }, intervalMs);
 
     return () => clearInterval(interval);
-  }, [settings.quoteInterval, refetchRandom]);
+  }, [settings.quoteInterval]);
+
+  // Fetch new quote immediately when switching to interval mode
+  useEffect(() => {
+    if (quoteMode === 'interval') {
+      refetchRandom();
+    }
+  }, [quoteMode]);
 
   const handleRefresh = () => {
     if (quoteMode === 'daily') {

@@ -63,7 +63,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       />
 
       {/* Settings Panel */}
-      <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto animate-slide-in">
+      <div className="settings-panel fixed inset-y-0 right-0 w-full sm:w-96 bg-white dark:bg-gray-800 shadow-2xl z-50 overflow-y-auto animate-slide-in" role="dialog" aria-label="설정 패널">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
