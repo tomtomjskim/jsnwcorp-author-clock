@@ -1,5 +1,5 @@
 import { useTime } from '../hooks/useTime';
-import { useSettings } from '../hooks/useSettings';
+import { useSettings } from '../contexts/SettingsContext';
 
 export function DateDisplay() {
   const time = useTime();

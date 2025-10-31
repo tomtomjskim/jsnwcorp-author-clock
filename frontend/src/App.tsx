@@ -8,7 +8,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { useTodayQuote, useRandomQuote } from './hooks/useQuote';
 import { useTheme } from './hooks/useTheme';
 import { useFullscreen } from './hooks/useFullscreen';
-import { useSettings } from './hooks/useSettings';
+import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { useDoubleClick } from './hooks/useDoubleClick';
 import { useIdleDetection } from './hooks/useIdleDetection';
 import type { Language } from './types/quote';
@@ -18,11 +18,14 @@ const queryClient = new QueryClient();
 function AuthorClock() {
   const [language] = useState<Language>('ko');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [quoteMode, setQuoteMode] = useState<'interval' | 'daily'>('daily');
 
   const { settings } = useSettings();
-  const { data: dailyQuote, isLoading: isLoadingDaily, error: dailyError, refetch: refetchDaily, isRefetching: isRefetchingDaily } = useTodayQuote(language);
-  const { data: randomQuote, isLoading: isLoadingRandom, error: randomError, refetch: refetchRandom, isRefetching: isRefetchingRandom } = useRandomQuote(language);
+
+  // Determine quote mode based on settings
+  const quoteMode = settings.quoteInterval === 1440 ? 'daily' : 'interval';
+
+  const { data: dailyQuote, isLoading: isLoadingDaily, error: dailyError, refetch: refetchDaily, isRefetching: isRefetchingDaily } = useTodayQuote(language, quoteMode === 'daily');
+  const { data: randomQuote, isLoading: isLoadingRandom, error: randomError, refetch: refetchRandom, isRefetching: isRefetchingRandom } = useRandomQuote(language, quoteMode === 'interval');
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
@@ -45,28 +48,52 @@ function AuthorClock() {
   const error = quoteMode === 'daily' ? dailyError : randomError;
   const isRefreshing = quoteMode === 'daily' ? isRefetchingDaily : isRefetchingRandom;
 
-  // Auto-rotate quotes based on interval setting
+  // Auto-rotate quotes based on interval setting (crontab-like: aligned to clock)
   useEffect(() => {
-    if (settings.quoteInterval === 1440) {
-      // 24 hours - use daily quote
-      setQuoteMode('daily');
+    // Skip if in daily mode
+    if (quoteMode === 'daily') {
       return;
     }
 
-    // Use interval-based rotation
-    setQuoteMode('interval');
+    const intervalMinutes = settings.quoteInterval;
+    const intervalMs = intervalMinutes * 60 * 1000;
 
-    // Fetch immediately when interval changes
-    refetchRandom();
+    // Calculate milliseconds until next aligned time (crontab-like)
+    const calculateNextDelay = () => {
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      const currentSeconds = now.getSeconds();
+      const currentMs = now.getMilliseconds();
 
-    // Set up interval for auto-rotation
-    const intervalMs = settings.quoteInterval * 60 * 1000;
-    const interval = setInterval(() => {
-      refetchRandom();
-    }, intervalMs);
+      // Calculate next interval boundary
+      const nextIntervalMinutes = Math.ceil(currentMinutes / intervalMinutes) * intervalMinutes;
+      const minutesUntilNext = nextIntervalMinutes - currentMinutes;
+      const secondsUntilNext = minutesUntilNext * 60 - currentSeconds;
+      const msUntilNext = secondsUntilNext * 1000 - currentMs;
 
-    return () => clearInterval(interval);
-  }, [settings.quoteInterval]); // Safe: refetchRandom is stable from React Query
+      return msUntilNext > 0 ? msUntilNext : intervalMs;
+    };
+
+    let timeout: number;
+    let interval: number;
+
+    // Wait until next aligned time, then fetch and set up regular interval
+    const initialDelay = calculateNextDelay();
+
+    timeout = setTimeout(() => {
+      refetchRandom(); // Fetch at aligned time
+
+      // Set up regular interval after first aligned fetch
+      interval = setInterval(() => {
+        refetchRandom();
+      }, intervalMs);
+    }, initialDelay);
+
+    return () => {
+      clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
+  }, [settings.quoteInterval, quoteMode, refetchRandom]);
 
   const handleRefresh = () => {
     if (quoteMode === 'daily') {
@@ -118,9 +145,11 @@ function AuthorClock() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthorClock />
-    </QueryClientProvider>
+    <SettingsProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthorClock />
+      </QueryClientProvider>
+    </SettingsProvider>
   );
 }
 

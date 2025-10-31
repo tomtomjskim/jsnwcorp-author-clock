@@ -1,5 +1,5 @@
 import { X, Clock as ClockIcon, RefreshCw, Calendar } from 'lucide-react';
-import { useSettings, type TimeFormat, type QuoteInterval, type DateFormat, type DatePosition } from '../hooks/useSettings';
+import { useSettings, type TimeFormat, type QuoteInterval, type DateFormat, type DatePosition } from '../contexts/SettingsContext';
 
 interface SettingsPanelProps {
   isOpen: boolean;
