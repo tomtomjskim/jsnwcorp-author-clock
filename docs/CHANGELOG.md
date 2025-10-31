@@ -2,6 +2,37 @@
 
 All notable changes to Author Clock will be documented in this file.
 
+## [2.0.2] - 2025-10-31
+
+### Fixed
+- **Critical Bug: Quote text not appearing on interval mode**: Fixed quote refetch logic where changing quote interval settings (e.g., 1min → 5min) didn't display new quotes immediately
+  - Root cause: Second useEffect only triggered when `quoteMode` changed, not when interval value changed
+  - Solution: Consolidated two useEffect hooks into one that immediately refetches on any `settings.quoteInterval` change
+  - Now works correctly on initial page load, switching from daily to interval, and changing between different interval values
+
+- **Settings not immediately applied**: All settings changes now apply immediately without page refresh (PWA-appropriate UX)
+  - Quote interval changes trigger immediate quote fetch
+  - Time format changes apply instantly
+  - Date format and position changes apply instantly
+
+### Technical Details
+- Removed redundant useEffect dependency on `quoteMode`
+- Single useEffect now handles both interval setup and immediate refetch
+- Updated in `/home/deploy/projects/author-clock/frontend/src/App.tsx:48-69`
+
+---
+
+## [2.0.1] - 2025-10-31
+
+### Fixed
+- **Settings panel click triggers fullscreen**: Extended `excludeSelectors` in `useDoubleClick` hook to include `label`, `[role="dialog"]`, and `.settings-panel`
+- **Infinite re-render loop**: Removed `refetchRandom` from useEffect dependency array to prevent React Query function recreation issues
+
+### Changed
+- Added ARIA attributes to SettingsPanel component (`role="dialog"`, `aria-label`)
+
+---
+
 ## [2.0.0] - 2025-10-31
 
 ### Added

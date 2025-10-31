@@ -56,6 +56,9 @@ function AuthorClock() {
     // Use interval-based rotation
     setQuoteMode('interval');
 
+    // Fetch immediately when interval changes
+    refetchRandom();
+
     // Set up interval for auto-rotation
     const intervalMs = settings.quoteInterval * 60 * 1000;
     const interval = setInterval(() => {
@@ -63,14 +66,7 @@ function AuthorClock() {
     }, intervalMs);
 
     return () => clearInterval(interval);
-  }, [settings.quoteInterval]);
-
-  // Fetch new quote immediately when switching to interval mode
-  useEffect(() => {
-    if (quoteMode === 'interval') {
-      refetchRandom();
-    }
-  }, [quoteMode]);
+  }, [settings.quoteInterval]); // Safe: refetchRandom is stable from React Query
 
   const handleRefresh = () => {
     if (quoteMode === 'daily') {
