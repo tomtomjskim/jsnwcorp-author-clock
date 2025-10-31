@@ -1,0 +1,162 @@
+[
+  {
+    "text": "While there's life, there's hope",
+    "author": "Cicero",
+    "source": "Tusculanae Disputationes",
+    "source_url": "https://en.wikipedia.org/wiki/Tusculanae_Disputationes",
+    "language": "en",
+    "category": "philosophy"
+  },
+  {
+    "text": "Knowledge is power",
+    "author": "Francis Bacon",
+    "source": "Meditationes Sacrae",
+    "source_url": "https://en.wikipedia.org/wiki/Francis_Bacon",
+    "language": "en",
+    "category": "philosophy"
+  },
+  {
+    "text": "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment",
+    "author": "Ralph Waldo Emerson",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Ralph_Waldo_Emerson",
+    "language": "en",
+    "category": "life"
+  },
+  {
+    "text": "The only way to do great work is to love what you do",
+    "author": "Steve Jobs",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Steve_Jobs",
+    "language": "en",
+    "category": "work"
+  },
+  {
+    "text": "Life is what happens when you're busy making other plans",
+    "author": "John Lennon",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/John_Lennon",
+    "language": "en",
+    "category": "life"
+  },
+  {
+    "text": "In the middle of difficulty lies opportunity",
+    "author": "Albert Einstein",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "language": "en",
+    "category": "opportunity"
+  },
+  {
+    "text": "Be the change that you wish to see in the world",
+    "author": "Mahatma Gandhi",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Mahatma_Gandhi",
+    "language": "en",
+    "category": "change"
+  },
+  {
+    "text": "The journey of a thousand miles begins with one step",
+    "author": "Lao Tzu",
+    "source": "Tao Te Ching",
+    "source_url": "https://en.wikipedia.org/wiki/Tao_Te_Ching",
+    "language": "en",
+    "category": "wisdom"
+  },
+  {
+    "text": "It does not matter how slowly you go as long as you do not stop",
+    "author": "Confucius",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Confucius",
+    "language": "en",
+    "category": "perseverance"
+  },
+  {
+    "text": "Everything you've ever wanted is on the other side of fear",
+    "author": "George Addair",
+    "source": null,
+    "source_url": null,
+    "language": "en",
+    "category": "courage"
+  },
+  {
+    "text": "Success is not final, failure is not fatal: it is the courage to continue that counts",
+    "author": "Winston Churchill",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Winston_Churchill",
+    "language": "en",
+    "category": "success"
+  },
+  {
+    "text": "Believe you can and you're halfway there",
+    "author": "Theodore Roosevelt",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Theodore_Roosevelt",
+    "language": "en",
+    "category": "motivation"
+  },
+  {
+    "text": "The only impossible journey is the one you never begin",
+    "author": "Tony Robbins",
+    "source": null,
+    "source_url": null,
+    "language": "en",
+    "category": "motivation"
+  },
+  {
+    "text": "What lies behind us and what lies before us are tiny matters compared to what lies within us",
+    "author": "Ralph Waldo Emerson",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Ralph_Waldo_Emerson",
+    "language": "en",
+    "category": "philosophy"
+  },
+  {
+    "text": "The best time to plant a tree was 20 years ago. The second best time is now",
+    "author": "Chinese Proverb",
+    "source": "Chinese Proverb",
+    "source_url": null,
+    "language": "en",
+    "category": "wisdom"
+  },
+  {
+    "text": "An unexamined life is not worth living",
+    "author": "Socrates",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Socrates",
+    "language": "en",
+    "category": "philosophy"
+  },
+  {
+    "text": "Your time is limited, don't waste it living someone else's life",
+    "author": "Steve Jobs",
+    "source": "Stanford Commencement Speech",
+    "source_url": "https://en.wikipedia.org/wiki/Steve_Jobs",
+    "language": "en",
+    "category": "life"
+  },
+  {
+    "text": "If you judge a fish by its ability to climb a tree, it will live its whole life believing that it is stupid",
+    "author": "Albert Einstein",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "language": "en",
+    "category": "wisdom"
+  },
+  {
+    "text": "Tell me and I forget. Teach me and I remember. Involve me and I learn",
+    "author": "Benjamin Franklin",
+    "source": null,
+    "source_url": "https://en.wikipedia.org/wiki/Benjamin_Franklin",
+    "language": "en",
+    "category": "learning"
+  },
+  {
+    "text": "If winter comes, can spring be far behind?",
+    "author": "Percy Bysshe Shelley",
+    "source": "Ode to the West Wind",
+    "source_url": "https://en.wikipedia.org/wiki/Ode_to_the_West_Wind",
+    "language": "en",
+    "category": "classic"
+  }
+]
