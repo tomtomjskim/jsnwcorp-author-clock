@@ -10,7 +10,8 @@ export interface Quote {
   is_approved: boolean;
   submitted_by: number | null;
   likes_count: number;
-  views_count: number;
+  isLiked?: boolean; // 사용자의 좋아요 여부
+  isBookmarked?: boolean; // 사용자의 북마크 여부
   created_at: string;
   updated_at: string;
 }

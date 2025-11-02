@@ -14,6 +14,8 @@ export default {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in',
         'fade-out': 'fadeOut 0.5s ease-out',
+        'like-bounce': 'likeBounce 0.4s ease-in-out',
+        'bookmark-twinkle': 'bookmarkTwinkle 0.5s ease-in-out',
       },
       keyframes: {
         fadeIn: {
@@ -23,6 +25,18 @@ export default {
         fadeOut: {
           '0%': { opacity: '1' },
           '100%': { opacity: '0' },
+        },
+        likeBounce: {
+          '0%': { transform: 'scale(1)' },
+          '25%': { transform: 'scale(1.3)' },
+          '50%': { transform: 'scale(0.9)' },
+          '75%': { transform: 'scale(1.1)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        bookmarkTwinkle: {
+          '0%, 100%': { transform: 'rotate(0deg) scale(1)' },
+          '25%': { transform: 'rotate(-15deg) scale(1.2)' },
+          '75%': { transform: 'rotate(15deg) scale(1.2)' },
         },
       },
     },

@@ -10,9 +10,16 @@ export const apiClient = axios.create({
   },
 });
 
-// Request interceptor
+// Request interceptor - Add session ID to all requests
 apiClient.interceptors.request.use(
   (config) => {
+    // localStorage에서 세션 ID 가져오기
+    const sessionId = localStorage.getItem('author-clock-session');
+
+    if (sessionId) {
+      config.headers['X-Session-ID'] = sessionId;
+    }
+
     return config;
   },
   (error) => {

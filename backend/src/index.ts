@@ -8,6 +8,7 @@ import { connectRedis } from './config/redis';
 import { logger } from './utils/logger';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import routes from './routes';
+import { startSessionCleanupJob, runInitialCleanup } from './jobs/sessionCleanup';
 
 // Validate environment variables
 try {
@@ -79,6 +80,13 @@ async function startServer() {
     // Connect to Redis
     logger.info('Connecting to Redis...');
     await connectRedis();
+
+    // Run initial session cleanup
+    logger.info('Running initial session cleanup...');
+    await runInitialCleanup();
+
+    // Start scheduled session cleanup job (daily at 3 AM)
+    startSessionCleanupJob();
 
     // Start Express server
     const port = config.port;

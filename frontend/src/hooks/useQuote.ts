@@ -23,3 +23,13 @@ export function useRandomQuote(language: Language = 'ko', enabled: boolean = tru
     enabled,
   });
 }
+
+export function useQuoteById(quoteId: number | null) {
+  return useQuery({
+    queryKey: ['quote', 'byId', quoteId],
+    queryFn: () => quotesApi.getQuoteById(quoteId!),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes
+    enabled: quoteId !== null,
+  });
+}

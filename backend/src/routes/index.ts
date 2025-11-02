@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import quotesRouter from './quotes';
+import likesRouter from './likes';
+import bookmarksRouter from './bookmarks';
 import { testConnection } from '../config/database';
 import redisClient from '../config/redis';
 import { HealthCheckResponse } from '../types/response';
@@ -61,6 +63,17 @@ router.get('/', (req: Request, res: Response) => {
         random: '/api/quotes/random?language=ko',
         list: '/api/quotes?limit=20&offset=0',
         byId: '/api/quotes/:id',
+        addLike: 'POST /api/quotes/:id/like',
+        removeLike: 'DELETE /api/quotes/:id/like',
+        likeStatus: '/api/quotes/:id/like-status',
+        likedQuotes: '/api/quotes/liked?limit=50&offset=0',
+        addBookmark: 'POST /api/quotes/:id/bookmark',
+        removeBookmark: 'DELETE /api/quotes/:id/bookmark',
+        bookmarkStatus: '/api/quotes/:id/bookmark-status',
+      },
+      bookmarks: {
+        list: '/api/bookmarks?limit=50&offset=0',
+        count: '/api/bookmarks/count',
       },
     },
     timestamp: new Date().toISOString(),
@@ -69,7 +82,12 @@ router.get('/', (req: Request, res: Response) => {
 
 /**
  * Mount routes
+ * IMPORTANT: Order matters! Specific routes must be mounted BEFORE parameterized routes.
+ * Likes (/liked) and bookmarks (/bookmark) must come before quotes (/:id)
  */
-router.use('/quotes', quotesRouter);
+router.use('/quotes', likesRouter); // Likes routes mounted under /quotes (BEFORE quotes router)
+router.use('/quotes', bookmarksRouter); // Bookmark routes mounted under /quotes (BEFORE quotes router)
+router.use('/quotes', quotesRouter); // Quotes router with /:id must be LAST
+router.use('/bookmarks', bookmarksRouter); // Bookmark list routes
 
 export default router;

@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import quoteService from '../services/QuoteService';
+import { LikeService } from '../services/LikeService';
+import { BookmarkService } from '../services/BookmarkService';
+import pool from '../config/database';
 import { ApiResponse, PaginatedResponse } from '../types/response';
 import { logger } from '../utils/logger';
+
+const likeService = new LikeService(pool);
+const bookmarkService = new BookmarkService(pool);
 
 /**
  * Get today's quote
@@ -26,9 +32,21 @@ export async function getTodayQuote(req: Request, res: Response) {
     return res.status(404).json(response);
   }
 
+  // Add isLiked and isBookmarked fields if user is authenticated
+  let isLiked = false;
+  let isBookmarked = false;
+  if (req.userId) {
+    isLiked = await likeService.isLiked(req.userId, quote.id);
+    isBookmarked = await bookmarkService.isBookmarked(req.userId, quote.id);
+  }
+
   const response: ApiResponse = {
     success: true,
-    data: quote,
+    data: {
+      ...quote,
+      isLiked,
+      isBookmarked,
+    },
     meta: {
       timestamp: new Date().toISOString(),
       isToday: true,
@@ -61,9 +79,21 @@ export async function getRandomQuote(req: Request, res: Response) {
     return res.status(404).json(response);
   }
 
+  // Add isLiked and isBookmarked fields if user is authenticated
+  let isLiked = false;
+  let isBookmarked = false;
+  if (req.userId) {
+    isLiked = await likeService.isLiked(req.userId, quote.id);
+    isBookmarked = await bookmarkService.isBookmarked(req.userId, quote.id);
+  }
+
   const response: ApiResponse = {
     success: true,
-    data: quote,
+    data: {
+      ...quote,
+      isLiked,
+      isBookmarked,
+    },
     meta: {
       timestamp: new Date().toISOString(),
       isRandom: true,
@@ -110,9 +140,21 @@ export async function getQuoteById(req: Request, res: Response) {
     return res.status(404).json(response);
   }
 
+  // Add isLiked and isBookmarked fields if user is authenticated
+  let isLiked = false;
+  let isBookmarked = false;
+  if (req.userId) {
+    isLiked = await likeService.isLiked(req.userId, quote.id);
+    isBookmarked = await bookmarkService.isBookmarked(req.userId, quote.id);
+  }
+
   const response: ApiResponse = {
     success: true,
-    data: quote,
+    data: {
+      ...quote,
+      isLiked,
+      isBookmarked,
+    },
     meta: {
       timestamp: new Date().toISOString(),
     },

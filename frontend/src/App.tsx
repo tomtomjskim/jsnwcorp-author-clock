@@ -5,10 +5,13 @@ import { DateDisplay } from './components/DateDisplay';
 import { QuoteDisplay } from './components/QuoteDisplay';
 import { ControlPanel } from './components/ControlPanel';
 import { SettingsPanel } from './components/SettingsPanel';
-import { useTodayQuote, useRandomQuote } from './hooks/useQuote';
+import { BookmarkPanel } from './components/BookmarkPanel';
+import { LikedQuotesPanel } from './components/LikedQuotesPanel';
+import { useTodayQuote, useRandomQuote, useQuoteById } from './hooks/useQuote';
 import { useTheme } from './hooks/useTheme';
 import { useFullscreen } from './hooks/useFullscreen';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
+import { SessionProvider } from './contexts/SessionContext';
 import { useDoubleClick } from './hooks/useDoubleClick';
 import { useIdleDetection } from './hooks/useIdleDetection';
 import type { Language } from './types/quote';
@@ -18,6 +21,9 @@ const queryClient = new QueryClient();
 function AuthorClock() {
   const [language] = useState<Language>('ko');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isBookmarkOpen, setIsBookmarkOpen] = useState(false);
+  const [isLikedOpen, setIsLikedOpen] = useState(false);
+  const [selectedQuoteId, setSelectedQuoteId] = useState<number | null>(null);
 
   const { settings } = useSettings();
 
@@ -26,6 +32,7 @@ function AuthorClock() {
 
   const { data: dailyQuote, isLoading: isLoadingDaily, error: dailyError, refetch: refetchDaily, isRefetching: isRefetchingDaily } = useTodayQuote(language, quoteMode === 'daily');
   const { data: randomQuote, isLoading: isLoadingRandom, error: randomError, refetch: refetchRandom, isRefetching: isRefetchingRandom } = useRandomQuote(language, quoteMode === 'interval');
+  const { data: selectedQuote, isLoading: isLoadingSelected, error: selectedError } = useQuoteById(selectedQuoteId);
   const { theme, toggleTheme } = useTheme();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
@@ -42,10 +49,10 @@ function AuthorClock() {
     bottomZonePercentage: 20,
   });
 
-  // Determine which quote to show based on interval setting
-  const quote = quoteMode === 'daily' ? dailyQuote : randomQuote;
-  const isLoading = quoteMode === 'daily' ? isLoadingDaily : isLoadingRandom;
-  const error = quoteMode === 'daily' ? dailyError : randomError;
+  // Determine which quote to show based on selection or interval setting
+  const quote = selectedQuote || (quoteMode === 'daily' ? dailyQuote : randomQuote);
+  const isLoading = selectedQuoteId ? isLoadingSelected : (quoteMode === 'daily' ? isLoadingDaily : isLoadingRandom);
+  const error = selectedQuoteId ? selectedError : (quoteMode === 'daily' ? dailyError : randomError);
   const isRefreshing = quoteMode === 'daily' ? isRefetchingDaily : isRefetchingRandom;
 
   // Auto-rotate quotes based on interval setting (crontab-like: aligned to clock)
@@ -96,11 +103,20 @@ function AuthorClock() {
   }, [settings.quoteInterval, quoteMode, refetchRandom]);
 
   const handleRefresh = () => {
+    // 선택된 명언이 있으면 초기화
+    if (selectedQuoteId) {
+      setSelectedQuoteId(null);
+    }
+
     if (quoteMode === 'daily') {
       refetchDaily();
     } else {
       refetchRandom();
     }
+  };
+
+  const handleQuoteSelect = (quoteId: number) => {
+    setSelectedQuoteId(quoteId);
   };
 
   return (
@@ -111,7 +127,7 @@ function AuthorClock() {
         <Clock />
         {settings.datePosition === 'below-time' && <DateDisplay />}
         {settings.datePosition === 'above-quote' && <DateDisplay />}
-        <QuoteDisplay quote={quote} isLoading={isLoading} error={error} />
+        <QuoteDisplay quote={quote} isLoading={isLoading} error={error} isFullscreen={isFullscreen} />
         {settings.datePosition === 'below-quote' && <DateDisplay />}
       </div>
 
@@ -123,6 +139,8 @@ function AuthorClock() {
         onFullscreenToggle={toggleFullscreen}
         onRefresh={handleRefresh}
         onSettingsClick={() => setIsSettingsOpen(true)}
+        onBookmarkClick={() => setIsBookmarkOpen(true)}
+        onLikedClick={() => setIsLikedOpen(true)}
         isRefreshing={isRefreshing}
         isVisible={shouldShowControls}
       />
@@ -131,6 +149,20 @@ function AuthorClock() {
       <SettingsPanel
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+      />
+
+      {/* Bookmark Panel */}
+      <BookmarkPanel
+        isOpen={isBookmarkOpen}
+        onClose={() => setIsBookmarkOpen(false)}
+        onQuoteSelect={handleQuoteSelect}
+      />
+
+      {/* Liked Quotes Panel */}
+      <LikedQuotesPanel
+        isOpen={isLikedOpen}
+        onClose={() => setIsLikedOpen(false)}
+        onQuoteSelect={handleQuoteSelect}
       />
 
       {/* App Info (Hidden in Fullscreen) */}
@@ -145,11 +177,13 @@ function AuthorClock() {
 
 function App() {
   return (
-    <SettingsProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthorClock />
-      </QueryClientProvider>
-    </SettingsProvider>
+    <SessionProvider>
+      <SettingsProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthorClock />
+        </QueryClientProvider>
+      </SettingsProvider>
+    </SessionProvider>
   );
 }
 

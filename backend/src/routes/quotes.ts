@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as quoteController from '../controllers/quoteController';
 import { asyncHandler } from '../utils/asyncHandler';
 import { validateQuery, schemas } from '../middleware/validator';
+import { optionalSessionAuth } from '../middleware/sessionAuth';
 
 const router = Router();
 
@@ -11,6 +12,7 @@ const router = Router();
  */
 router.get(
   '/today',
+  optionalSessionAuth,
   validateQuery(schemas.language),
   asyncHandler(quoteController.getTodayQuote)
 );
@@ -21,6 +23,7 @@ router.get(
  */
 router.get(
   '/random',
+  optionalSessionAuth,
   validateQuery(schemas.language),
   asyncHandler(quoteController.getRandomQuote)
 );
@@ -31,6 +34,7 @@ router.get(
  */
 router.get(
   '/',
+  optionalSessionAuth,
   validateQuery(schemas.pagination),
   asyncHandler(quoteController.getQuotes)
 );
@@ -39,7 +43,7 @@ router.get(
  * GET /api/quotes/:id
  * Get a specific quote by ID
  */
-router.get('/:id', asyncHandler(quoteController.getQuoteById));
+router.get('/:id', optionalSessionAuth, asyncHandler(quoteController.getQuoteById));
 
 /**
  * POST /api/quotes

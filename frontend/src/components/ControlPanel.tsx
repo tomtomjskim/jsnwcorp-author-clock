@@ -1,4 +1,4 @@
-import { Sun, Moon, Maximize, Minimize, RefreshCw, Settings } from 'lucide-react';
+import { Sun, Moon, Maximize, Minimize, RefreshCw, Settings, Bookmark, Heart } from 'lucide-react';
 
 interface ControlPanelProps {
   theme: 'light' | 'dark';
@@ -7,6 +7,8 @@ interface ControlPanelProps {
   onFullscreenToggle: () => void;
   onRefresh: () => void;
   onSettingsClick: () => void;
+  onBookmarkClick: () => void;
+  onLikedClick: () => void;
   isRefreshing?: boolean;
   isVisible?: boolean;
 }
@@ -18,6 +20,8 @@ export function ControlPanel({
   onFullscreenToggle,
   onRefresh,
   onSettingsClick,
+  onBookmarkClick,
+  onLikedClick,
   isRefreshing = false,
   isVisible = true,
 }: ControlPanelProps) {
@@ -35,6 +39,26 @@ export function ControlPanel({
         aria-label="설정"
       >
         <Settings size={20} />
+      </button>
+
+      {/* Bookmark Button */}
+      <button
+        onClick={onBookmarkClick}
+        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        title="내 북마크"
+        aria-label="내 북마크"
+      >
+        <Bookmark size={20} className="text-yellow-400" />
+      </button>
+
+      {/* Liked Quotes Button */}
+      <button
+        onClick={onLikedClick}
+        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        title="좋아요한 명언"
+        aria-label="좋아요한 명언"
+      >
+        <Heart size={20} className="text-red-500" fill="currentColor" />
       </button>
 
       {/* Refresh Button */}

@@ -39,8 +39,8 @@ export class QuoteService {
       // Cache the result
       if (quote) {
         await cache.setJSON(cacheKey, quote, config.cache.dailyQuoteTTL);
-        // Increment views
-        await this.repository.incrementViews(quote.id);
+        // Views tracking removed - column no longer exists
+        // await this.repository.incrementViews(quote.id);
       }
 
       return quote;
@@ -57,10 +57,10 @@ export class QuoteService {
     try {
       const quote = await this.repository.findRandom(language);
 
-      if (quote) {
-        // Increment views
-        await this.repository.incrementViews(quote.id);
-      }
+      // Views tracking removed - column no longer exists
+      // if (quote) {
+      //   await this.repository.incrementViews(quote.id);
+      // }
 
       return quote;
     } catch (error) {
@@ -76,10 +76,10 @@ export class QuoteService {
     try {
       const quote = await this.repository.findById(id);
 
-      if (quote) {
-        // Increment views
-        await this.repository.incrementViews(quote.id);
-      }
+      // Views tracking removed - column no longer exists
+      // if (quote) {
+      //   await this.repository.incrementViews(quote.id);
+      // }
 
       return quote;
     } catch (error) {

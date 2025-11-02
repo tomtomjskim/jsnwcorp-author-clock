@@ -1,12 +1,15 @@
 import type { Quote } from '../types/quote';
+import { LikeButton } from './LikeButton';
+import { BookmarkButton } from './BookmarkButton';
 
 interface QuoteDisplayProps {
   quote: Quote | undefined;
   isLoading: boolean;
   error: Error | null;
+  isFullscreen?: boolean;
 }
 
-export function QuoteDisplay({ quote, isLoading, error }: QuoteDisplayProps) {
+export function QuoteDisplay({ quote, isLoading, error, isFullscreen = false }: QuoteDisplayProps) {
   if (isLoading) {
     return (
       <div className="text-center py-12 animate-pulse">
@@ -52,17 +55,20 @@ export function QuoteDisplay({ quote, isLoading, error }: QuoteDisplayProps) {
         </div>
       )}
 
-      {/* Stats */}
-      <div className="flex items-center justify-center gap-6 mt-8 text-sm text-gray-500 dark:text-gray-400">
-        <div className="flex items-center gap-2">
-          <span>❤️</span>
-          <span>{quote.likes_count.toLocaleString()}</span>
+      {/* Action Buttons (hidden in fullscreen) */}
+      {!isFullscreen && (
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <LikeButton
+            quoteId={quote.id}
+            initialLiked={quote.isLiked}
+            initialCount={quote.likes_count}
+          />
+          <BookmarkButton
+            quoteId={quote.id}
+            initialBookmarked={quote.isBookmarked}
+          />
         </div>
-        <div className="flex items-center gap-2">
-          <span>👁️</span>
-          <span>{quote.views_count.toLocaleString()}</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
