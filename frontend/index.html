@@ -1,11 +1,56 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 기본 SEO -->
+  <title>Author Clock - 시간과 함께하는 명언</title>
+  <meta name="description" content="매 순간 새로운 명언을 만나보세요. 세계 문학의 명구를 시간과 함께 감상하는 아름다운 시계." />
+  <meta name="keywords" content="명언 시계, 오늘의 명언, 문학 명언, 작가 명언, 명언 모음, author clock" />
+  <meta name="author" content="Author Clock" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Author Clock - 시간과 함께하는 명언" />
+  <meta property="og:description" content="매 순간 새로운 명언을 만나보세요. 세계 문학의 명구를 시간과 함께 감상하는 아름다운 시계." />
+  <meta property="og:image" content="https://clock.jsnetworkcorp.com/og/home.png" />
+  <meta property="og:url" content="https://clock.jsnetworkcorp.com" />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="og:site_name" content="Author Clock" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Author Clock - 시간과 함께하는 명언" />
+  <meta name="twitter:description" content="매 순간 새로운 명언을 만나보세요." />
+  <meta name="twitter:image" content="https://clock.jsnetworkcorp.com/og/home.png" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://clock.jsnetworkcorp.com" />
+
+  <!-- 다국어 -->
+  <link rel="alternate" hreflang="ko" href="https://clock.jsnetworkcorp.com/?lang=ko" />
+  <link rel="alternate" hreflang="en" href="https://clock.jsnetworkcorp.com/?lang=en" />
+  <link rel="alternate" hreflang="x-default" href="https://clock.jsnetworkcorp.com" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- JSON-LD 구조화 데이터 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Author Clock",
+    "description": "시간과 함께하는 명언 시계",
+    "url": "https://clock.jsnetworkcorp.com",
+    "applicationCategory": "LifestyleApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+    "inLanguage": ["ko", "en", "ja", "zh", "es", "fr", "de"]
+  }
+  </script>
+</head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

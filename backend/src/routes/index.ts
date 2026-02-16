@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import quotesRouter from './quotes';
 import likesRouter from './likes';
 import bookmarksRouter from './bookmarks';
+import seoRouter from './seo';
 import { testConnection } from '../config/database';
 import redisClient from '../config/redis';
 import { HealthCheckResponse } from '../types/response';
@@ -75,6 +76,10 @@ router.get('/', (req: Request, res: Response) => {
         list: '/api/bookmarks?limit=50&offset=0',
         count: '/api/bookmarks/count',
       },
+      seo: {
+        sitemap: '/api/seo/sitemap',
+        metadata: '/api/seo/meta/:quoteId',
+      },
     },
     timestamp: new Date().toISOString(),
   });
@@ -89,5 +94,6 @@ router.use('/quotes', likesRouter); // Likes routes mounted under /quotes (BEFOR
 router.use('/quotes', bookmarksRouter); // Bookmark routes mounted under /quotes (BEFORE quotes router)
 router.use('/quotes', quotesRouter); // Quotes router with /:id must be LAST
 router.use('/bookmarks', bookmarksRouter); // Bookmark list routes
+router.use('/seo', seoRouter); // SEO routes for sitemap and metadata
 
 export default router;
